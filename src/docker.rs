@@ -63,6 +63,7 @@ pub fn run(
     args: &[String],
     target_dir: &Option<PathBuf>,
     root: &Root,
+    docker_root: &PathBuf,
     config: &Config,
     uses_xargo: bool,
     sysroot: &PathBuf,
@@ -93,7 +94,7 @@ pub fn run(
     let cargo_dir = mount_finder.find_mount_path(&cargo_dir);
     let xargo_dir = mount_finder.find_mount_path(&xargo_dir);
     let target_dir = mount_finder.find_mount_path(&target_dir);
-    let mount_root = mount_finder.find_mount_path(&root);
+    let mount_root = mount_finder.find_mount_path(&docker_root);
     let sysroot = mount_finder.find_mount_path(&sysroot);
 
     let mut cmd = if uses_xargo {

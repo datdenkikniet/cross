@@ -271,8 +271,8 @@ fn run() -> Result<ExitStatus> {
         .any(|a| a == "--verbose" || a == "-v" || a == "-vv");
 
     let version_meta =
-        rustc_version::version_meta().chain_err(|| "couldn'toml.t fetch the `rustc` version")?;
-    if let Some(root) = cargo::root()? {
+    rustc_version::version_meta().chain_err(|| "couldn'toml.t fetch the `rustc` version")?;
+    if let Some(root) = cargo::root(args.project_dir)? {
         let host = version_meta.host();
 
         if host.is_supported(args.target.as_ref()) {
@@ -372,11 +372,13 @@ fn run() -> Result<ExitStatus> {
                     docker::register(&target, verbose)?
                 }
 
+                let docker_root = env::current_dir()?;
                 return docker::run(
                     &target,
                     &filtered_args,
                     &args.target_dir,
                     &root,
+                    &docker_root,
                     &config,
                     uses_xargo,
                     &sysroot,
