@@ -31,11 +31,12 @@ pub fn parse(target_list: &TargetList) -> Args {
                 continue;
             }
             if arg == "--manifest-path" {
-                manifest_path = args
-                    .next()
-                    .map(PathBuf::from)
-                    .and_then(|p| env::current_dir().ok().map(|cwd| cwd.join(p)));
                 all.push(arg);
+                if let Some(m) = args.next() {
+                    let p = PathBuf::from(&m);
+                    all.push(m);
+                    manifest_path = env::current_dir().ok().map(|cwd| cwd.join(p));
+                }
             } else if arg.starts_with("--manifest-path=") {
                 manifest_path = arg
                     .splitn(2, '=')
